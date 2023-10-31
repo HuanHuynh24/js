@@ -99,10 +99,19 @@ function getUser(user_id){
         .then(function(user){
            return {
                 user: user,
-                conment: conment
+                comment: conment
            }
        })
     })
     .then(function(data){
         console.log(data)
+        let list = document.getElementById('list-comment')
+        let html ='';
+        data.comment.forEach(function(comment){
+            let user = data.user.find(function(user){
+                return user.id===comment.user_id
+            })
+            html += `<li>${user.name}:${comment.conment}</li>`
+        })
+        list.innerHTML=html;
     })

@@ -115,3 +115,6 @@ function getUser(user_id){
         })
         list.innerHTML=html;
     })
+
+// JSON
+

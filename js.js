@@ -104,7 +104,7 @@ function getUser(user_id){
        })
     })
     .then(function(data){
-        console.log(data)
+      //  console.log(data)
         let list = document.getElementById('list-comment')
         let html ='';
         data.comment.forEach(function(comment){
@@ -117,4 +117,103 @@ function getUser(user_id){
     })
 
 // JSON
+let jsonfake  = 'https://jsonplaceholder.typicode.com/posts'
+fetch(jsonfake)
+    .then(function(response){
+        return response.json()
+    })
+    .then(function(posts){
+        var html=  posts.map(function(e){
+            return `<section>
+            <h1 class="style">${e.id}:${e.title}</h1>
+            <p>${e.body}</p>
+        </section>`
+        })
+       let htmls = html.join('');
+      // console.log(htmls)
+       document.querySelector('.post').innerHTML = htmls
+    })
 
+let db = 'http://localhost:3000/user'
+
+function start(){
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        getUser(renderUser);
+        handleCreateForm();
+    });
+}
+
+start()
+
+// function
+function getUser(callback){
+    fetch(db)
+        .then(function(response){
+            return response.json()
+        })
+        .then(callback)
+}
+function renderUser(user){
+    var Users = document.querySelector('.listuser')
+  
+    var listuser = user.map(function(e){
+        return `
+            <section class="item-${e.id}"">
+                <p>+ Name: ${e.Name}</p>
+                <p>+ Comment: ${e.Comment}</p>
+                <button onclick="handleDelete(${e.id})">xoá</button>
+            </section>
+        `
+    })
+    let list =listuser.join('')
+    Users.innerHTML=list
+}
+// tạo thông tin
+function handleCreateForm(){
+    let creatbtn = document.querySelector('#Create')
+    creatbtn.onclick = function(){
+        let name = document.querySelector('input[name="Name"]').value;
+        let comment = document.querySelector('input[name="Comment"]').value;
+        var data = {
+            Name:name,
+            Comment:comment
+        }
+        postUser(data, function(){
+            getUser(renderUser);
+        })
+    }
+    
+}
+function postUser(data, callback){
+    option = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data)
+    }
+    fetch(db, option)
+        .then(function(response){
+           return response.json()
+        })
+        .then(callback)
+}
+// delete
+
+function handleDelete(index){
+    option = {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+          }
+         
+    }
+    fetch(db+'/'+index, option)
+        .then(function(response){
+           return response.json()
+        })
+        .then(function(){
+
+        })
+}

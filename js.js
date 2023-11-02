@@ -213,7 +213,7 @@ function handleDelete(index){
         .then(function(response){
            return response.json()
         })
-        .then(function(){
-
+        .then(function(index){
+            document.querySelector('item-'+index).remove();
         })
 }
